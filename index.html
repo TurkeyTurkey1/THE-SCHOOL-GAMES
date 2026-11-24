@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The School Games — Tribute Tracker</title>
+<meta name="description" content="A Hunger Games-style school competition tracker: tributes, scores, events, bracket and the arena map." />
+<meta name="theme-color" content="#0b0808" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='88'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body data-mode="capitol">
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">✦</div>
+      <div class="brand-text">
+        <h1 id="brandTitle">The School Games</h1>
+        <p id="brandSub">Westview High School · 74th Edition</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="mode-switch" data-action="toggle-mode" title="Switch visual theme">
+        <span class="mode-dot"></span><span id="modeLabel">Capitol Mode</span>
+      </button>
+      <button class="control-toggle" data-action="toggle-admin" aria-pressed="false">⚙ Game Control</button>
+    </div>
+  </header>
+
+  <nav class="tabs" aria-label="Sections">
+    <button class="tab active" data-tab="overview"><span class="tab-num">01</span>Overview</button>
+    <button class="tab" data-tab="tributes"><span class="tab-num">02</span>Tributes</button>
+    <button class="tab" data-tab="scoreboard"><span class="tab-num">03</span>Scoreboard</button>
+    <button class="tab" data-tab="events"><span class="tab-num">04</span>Events &amp; Bracket</button>
+    <button class="tab" data-tab="map"><span class="tab-num">05</span>The Arena</button>
+    <button class="tab" data-tab="rules"><span class="tab-num">06</span>Rules &amp; Lore</button>
+  </nav>
+
+  <main>
+    <section class="view active" id="view-overview"></section>
+    <section class="view" id="view-tributes"></section>
+    <section class="view" id="view-scoreboard"></section>
+    <section class="view" id="view-events"></section>
+    <section class="view" id="view-map"></section>
+    <section class="view" id="view-rules"></section>
+  </main>
+
+  <footer class="footer">
+    <span><b>Remember:</b> this is a fictional game. All challenges are school-approved and nobody gets hurt.</span>
+    <span>Saved locally in your browser · <button class="btn small ghost" data-action="open-drawer">Game Control</button></span>
+  </footer>
+</div>
+
+<div class="backdrop" id="backdrop" data-action="close-all"></div>
+
+<aside class="drawer" id="drawer" aria-label="Game control panel">
+  <div class="drawer-head">
+    <h3>⚙ Game Control</h3>
+    <button class="close-x" data-action="close-all" aria-label="Close">×</button>
+  </div>
+  <div class="drawer-section">
+    <h4>Tournament Settings</h4>
+    <div class="form-row"><label>School name</label><input id="setSchool" /></div>
+    <div class="form-grid">
+      <div class="form-row"><label>Edition number</label><input id="setEdition" type="number" min="1" /></div>
+      <div class="form-row"><label>Districts</label><input id="setDistricts" type="number" min="1" /></div>
+    </div>
+    <button class="btn small primary" data-action="save-settings">Save Settings</button>
+  </div>
+  <div class="drawer-section">
+    <h4>Add a Tribute</h4>
+    <div class="form-row"><label>Name</label><input id="newTribName" placeholder="e.g. Rowan Cross" /></div>
+    <div class="form-grid">
+      <div class="form-row"><label>District</label><input id="newTribDistrict" placeholder="D1" /></div>
+      <div class="form-row"><label>Emoji avatar</label><input id="newTribEmoji" placeholder="🏹" maxlength="4" /></div>
+    </div>
+    <div class="form-row"><label>Short bio</label><input id="newTribBio" placeholder="Track star, undefeated in dodgeball..." /></div>
+    <button class="btn small primary" data-action="add-tribute">Add Tribute</button>
+  </div>
+  <div class="drawer-section">
+    <h4>Add an Event</h4>
+    <div class="form-row"><label>Event name</label><input id="newEventName" placeholder="e.g. The Cornucopia Dash" /></div>
+    <div class="form-grid">
+      <div class="form-row"><label>Date</label><input id="newEventDate" type="date" /></div>
+      <div class="form-row"><label>Location</label><input id="newEventLoc" placeholder="The Quad" /></div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row"><label>Points</label><input id="newEventPts" type="number" value="100" min="0" /></div>
+      <div class="form-row"><label>Status</label><select id="newEventStatus"><option value="upcoming">Upcoming</option><option value="live">Live</option><option value="complete">Complete</option></select></div>
+    </div>
+    <button class="btn small primary" data-action="add-event">Add Event</button>
+  </div>
+  <div class="drawer-section">
+    <h4>Post an Announcement</h4>
+    <div class="form-row"><label>Message</label><textarea id="newAnnText" placeholder="Capitol bulletin..."></textarea></div>
+    <button class="btn small primary" data-action="add-announcement">Post Bulletin</button>
+  </div>
+  <div class="drawer-section">
+    <h4>Data Tools</h4>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn small ghost" data-action="export">Export JSON</button>
+      <button class="btn small ghost" data-action="import">Import JSON</button>
+      <button class="btn small danger" data-action="reset">Reset Data</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json" hidden />
+    <p class="drawer-note">Everything is stored in this browser's local storage. Export a JSON file to move your tournament to another computer or share it with a teammate.</p>
+  </div>
+</aside>
+
+<div class="modal-wrap" id="modalWrap" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modalTitle">Details</h3><button class="close-x" data-action="close-modal" aria-label="Close">×</button></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="reaping" id="reaping">
+  <div class="r-inner">
+    <p class="r-kicker" id="reapKicker">The Reaping</p>
+    <div class="r-name" id="reapName">…</div>
+    <p class="r-district" id="reapDistrict"></p>
+    <div style="margin-top:30px"><button class="btn primary" data-action="close-reaping">May the odds be ever in your favor</button></div>
+  </div>
+</div>
+
+<div class="toast-root" id="toastRoot" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
